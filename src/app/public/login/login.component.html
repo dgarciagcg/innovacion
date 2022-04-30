@@ -1,0 +1,15 @@
+<div class="page-content">
+    <div style="padding: 1rem 3rem;">
+        <h5>Innovación</h5>
+        <form [formGroup]="formularioLogin">
+            <div class="input-group" style="margin-bottom: 8px;">
+                <div class="input-group-text"><i class="fas fa-user" style="font-size: 1.142rem;"></i></div>
+                <input autocomplete="false" class="form-control" type="text" formControlName="codigo"
+                    placeholder="Indique el codigo de algun producto para ingresar" required>
+            </div>
+            <button class="btn btn-outline-primary" (click)="loguearse()">
+                Iniciar sesión
+            </button>
+        </form>
+    </div>
+</div>

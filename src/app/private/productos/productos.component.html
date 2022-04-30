@@ -1,0 +1,195 @@
+<div class="container">
+    <!-- logout -->
+    <div class="mb-3 mt-3 col-lg-6 col-sm-6">
+        <button class="btn btn-outline-danger" (click)="logout()">
+            Salir
+        </button>
+    </div>
+    <div class="display-flex mb-4" style="height: 40px; width: 100%;">
+        <h6 style="flex: 1 1 auto;">Registro productos</h6>
+    </div>
+    <!-- Formulario de inserción -->
+    <form class="row" [formGroup]="formularioCrear">
+        <!-- producto -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="text" placeholder="Producto" formControlName="producto">
+        </div>
+        <!-- codigo -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="text" placeholder="Codigo" formControlName="codigo">
+        </div>
+        <!-- descripcion -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="text" placeholder="Descripcion" formControlName="descripcion">
+        </div>
+        <!-- precio -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="number" placeholder="Precio" formControlName="precio">
+        </div>
+        <!-- categoria -->
+        <label class="mb-3 col-lg-6 col-sm-6">
+            <div class="position-absolute">Categoria</div>
+            <select required class="form-select form-control" placeholder="Categoria" formControlName="idCategoria">
+                <ng-container *ngFor="let categoria of categorias">
+                    <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                </ng-container>
+            </select>
+        </label>
+        <!-- estado -->
+        <label class="mb-3 col-lg-6 col-sm-6">
+            <input class="form-check-input form-check-switch me-2" type="checkbox" formControlName="estado"
+                style="width: 30px; height: 30px;">
+            <span class="me-1" style="font-size: 13px;">Estado</span>
+        </label>
+
+        <!-- agregar categoria -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#categorias">
+                Agregar categoria
+            </button>
+        </div>
+
+        <div class="col-12 mb-3 display-grid">
+            <button class="btn btn-primary" (click)="saveProducto()">
+                Agregar
+            </button>
+        </div>
+    </form>
+
+    <h6 class="ms-5">Productos activos</h6>
+    <!-- Listado activos -->
+    <div class="card">
+        <div class="card-body">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th column-name="producto">Producto</th>
+                        <th column-name="codigo">Codigo</th>
+                        <th column-name="descripcion">Descripcion</th>
+                        <th column-name="precio">Precio</th>
+                        <th column-name="categoria">Categoria</th>
+                        <th column-name="estado">Estado</th>
+                        <th column-name="acciones">Acciones</th>
+                    </tr>
+                </thead>
+                <ng-container *ngFor="let producto of productosActivos">
+                    <tbody>
+                        <td>{{producto.producto}}</td>
+                        <td>{{producto.codigo}}</td>
+                        <td>{{producto.descripcion}}</td>
+                        <td>{{producto.precio}}</td>
+                        <td>{{producto.idCategoria}}</td>
+                        <td>{{ producto.estado ? 'Activo' : 'Inactivo' }}</td>
+                        <td>
+                            <button class="btn btn-outline-primary me-2" (click)="getProducto(producto.id)"
+                                data-bs-toggle="modal" data-bs-target="#editar">Ver</button>
+                            <button class="btn btn-outline-danger me-2"
+                                (click)="cambiarEstado(producto)">Desactivar</button>
+                            <button class="btn btn-outline-danger"
+                                (click)="deleteProducto(producto.id)">Eliminar</button>
+                        </td>
+                    </tbody>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+
+    <h6 class="ms-5">Productos inactivos</h6>
+    <!-- Listado -->
+    <div class="card">
+        <div class="card-body">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th column-name="producto">Producto</th>
+                        <th column-name="codigo">Codigo</th>
+                        <th column-name="descripcion">Descripcion</th>
+                        <th column-name="precio">Precio</th>
+                        <th column-name="categoria">Categoria</th>
+                        <th column-name="estado">Estado</th>
+                        <th column-name="acciones">Acciones</th>
+                    </tr>
+                </thead>
+                <ng-container *ngFor="let producto of productosInactivos">
+                    <tbody>
+                        <td>{{producto.producto}}</td>
+                        <td>{{producto.codigo}}</td>
+                        <td>{{producto.descripcion}}</td>
+                        <td>{{producto.precio}}</td>
+                        <td>{{producto.idCategoria}}</td>
+                        <td>{{ producto.estado ? 'Activo' : 'Inactivo' }}</td>
+                        <td>
+                            <button class="btn btn-outline-primary me-2" (click)="getProducto(producto.id)"
+                                data-bs-toggle="modal" data-bs-target="#editar">Ver</button>
+                            <button class="btn btn-outline-success me-2"
+                                (click)="cambiarEstado(producto)">Activar</button>
+                            <button class="btn btn-outline-danger"
+                                (click)="deleteProducto(producto.id)">Eliminar</button>
+                        </td>
+                    </tbody>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Informacion estudiante</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de inserción -->
+                <form class="row" [formGroup]="formularioEditar">
+                    <!-- producto -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="text" placeholder="Producto"
+                            formControlName="producto">
+                    </div>
+                    <!-- codigo -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="text" placeholder="Codigo" formControlName="codigo">
+                    </div>
+                    <!-- descripcion -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="text" placeholder="Descripcion"
+                            formControlName="descripcion">
+                    </div>
+                    <!-- precio -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="number" placeholder="Precio"
+                            formControlName="precio">
+                    </div>
+                    <!-- categoria -->
+                    <label class="mb-3 col-lg-6 col-sm-6">
+                        <div class="position-absolute">Tipo</div>
+                        <select required class="form-select form-control" placeholder="Categoria"
+                            formControlName="idCategoria">
+                            <ng-container *ngFor="let categoria of categorias">
+                                <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                            </ng-container>
+                        </select>
+                    </label>
+
+                    <!-- estado -->
+                    <label class="mb-3 col-lg-6 col-sm-6">
+                        <input class="form-check-input form-check-switch me-2" type="checkbox" formControlName="estado"
+                            style="width: 30px; height: 30px;">
+                        <span class="me-1" style="font-size: 13px;">Estado</span>
+                    </label>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="updateProducto()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-categorias>
+</app-categorias>
